@@ -19,6 +19,14 @@
     document.onclick = function() {
       self.minimize();
     }
+    container.onclick = function(e) {
+      var target = e ? e.target : window.event.srcElement;
+      if (target.tagName == 'A' && target.getAttribute('data-teapi') == 'true') {
+        cancelBubble(e || window.event);
+        self.loadURL(target.getAttribute('href'));
+        return false;
+      }
+    }
 
     container.appendChild(this.types.node);
     this.reload();
@@ -27,7 +35,13 @@
   Viewer.prototype.reload = function() {
     var url = this.config.baseUrl || 'https://beta.teapi.io/v1/';
     url += this.types.value
-    url +=  '?callback=' + this.callback + '&key=' + this.config.key;
+    url += '?key=' + this.config.key;
+    this.loadURL(url);
+  };
+
+  Viewer.prototype.loadURL = function(url) {
+    var joiner = url.indexOf('?') == -1 ? '?' : '&';
+    url += joiner + 'callback=' + this.callback;
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
   };
 
@@ -137,6 +151,8 @@
     return depths[depth];
   };
 
+  var linkPattern = /^https?:\/\//;
+  var teapiLinkPattern = /^https?:\/\/\w+\.teapi.io/;
   function highlight(node, depth, array) {
     var str = array ? '[' : '{'
     var first = true;
@@ -165,7 +181,16 @@
           str += highlight(value, depth + 1, false);
           break;
         case 'string':
-          str += '<span class=string>"' + escapeHTML(value) + '"</span>';
+          value = escapeHTML(value);
+          if (linkPattern.test(value)) {
+            var special = '';
+            if (teapiLinkPattern.test(value)) {
+              special = ' data-teapi=true';
+            }
+            str += '<a class=link><a href="' + value + '"' + special + '>' + escapeHTML(value) + '"</a>';
+          } else {
+            str += '<span class=string>"' + escapeHTML(value) + '"</span>';
+          }
           break;
         default:
           str += '<span class="' + type + '">' + value + '</span>';
