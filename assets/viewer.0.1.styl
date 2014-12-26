@@ -1,0 +1,52 @@
+noselect()
+  -webkit-user-select none
+  -moz-user-select none
+  -ms-user-select none
+
+.viewer
+  position relative
+  padding-bottom 430px
+  margin-bottom 50px
+  ul
+    list-style none
+  .result
+    background #f6f6f6
+    border 1px solid #f0f0f0
+    border-bottom 0
+    width 100%
+    position absolute
+    height 400px
+    z-index 2
+    overflow auto
+    font-size 0.8em;
+  .types
+    noselect()
+    bottom 0
+    position absolute
+    z-index 0
+    background #666
+    color #fff
+    font-size 0.9em
+    min-width 200px
+    &.many
+      cursor pointer
+    &.many:before
+      position absolute
+      bottom 8px
+      right 12px
+      font-size 12px
+      content: "\25BC";
+    &.show
+      z-index 3
+    &.show:before
+      content: "\25B2";
+  .types li
+    padding 0 10px
+    height 30px
+    line-height 30px
+  .types.many li:last-of-type
+    border-top 1px solid #000
+  .types.many li:last-of-type
+    border-top 1px solid #000
+  .types.show li:not(:last-of-type):hover
+    background #999

@@ -1,1 +1,4 @@
 _site
+Makefile
+.DS_Store
+assets/*.css

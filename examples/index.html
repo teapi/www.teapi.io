@@ -1,0 +1,48 @@
+---
+layout: default
+title: Examples · Teapi
+---
+<link href=/assets/viewer.0.1.css rel=stylesheet type=text/css>
+<script src=/assets/viewer.0.1.js></script>
+<div class=section>
+  <h2>Techstars Statistics</h2>
+  <p>The Techstars API is a tiny API which serves as a good introduction to some of Teapi's features. The data comes from the <a href="http://www.techstars.com/companies/stats/">Techstars Stats web page</a></p>
+  <div class=viewer data-key=techstars></div>
+</div>
+
+
+<script>
+var examples = {
+  techstars: {
+    key: '4800mh74u41s',
+    baseUrl: 'http://sandbox.teapi.io/v1/',
+    types: [
+      {
+        name: 'classes',
+        indexes: [
+          {name: 'acquired', type: 'int'},
+          {name: 'failed', type: 'int'},
+          {name: 'funding', type: 'int'}
+        ]
+      },
+      {
+        name: 'companies',
+        auto: true,
+        indexes: [
+          {name: 'funding', type: 'int'},
+          {name: 'status', type: 'text'},
+          {name: 'city', type: 'text'}
+        ]
+      }
+    ]
+  }
+};
+var divs = document.getElementsByTagName('div');
+for (var i = 0; i < divs.length; i++) {
+  var div = divs[i];
+  if (div.className == 'viewer') {
+    var config = examples[div.getAttribute('data-key')];
+    new TeapiViewer(div, config);
+  }
+}
+</script>

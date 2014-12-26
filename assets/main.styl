@@ -6,8 +6,11 @@ body, input, select
   font 300 18px Roboto, Verdana, Arial
 
 a
+  color #2574A9
   text-decoration none
   border-bottom 1px solid transparent
+  &:hover
+    color #22313F
 
 ul
   list-style none
@@ -36,6 +39,17 @@ p
 .section
   margin-top 40px
 
+.button
+  padding 6px 12px
+  border-radius 4px
+  background #52b3d9
+  color #fff
+  border none
+  cursor pointer
+  &:hover
+    background #5C97BF
+    box-shadow 0 0 6px #666
+
 #top
   background #52b3d9
   height 40px
@@ -43,17 +57,16 @@ p
     line-height 40px
     color #fff
     font-size 16px
-    &:last-of-type
-      float right
-      &:hover
-        color #222
-        text-decoration underline
-    &:first-of-type
-      float left
-      font-weight 500
-      &:hover
-        color #fff
-        text-decoration none
+    float left
+    font-weight 500
+    &:hover
+      color #fff
+      text-decoration none
+  #signin
+    float right
+    &:hover
+      color #222
+      text-decoration underline
 
 #nav
   font-size 16px
@@ -88,14 +101,6 @@ p
     text-transform uppercase
     margin-bottom 30px
     color #444
-  a
-    padding 6px 12px
-    border-radius 4px
-    background #52b3d9
-    color #fff
-    &:hover
-      background #5C97BF
-      box-shadow 0 0 6px #666
   img
     float right
     max-width 100%
@@ -126,17 +131,9 @@ p
     float left
     position relative
     text-align center
-    background #f0f0f0
     margin-right 5px
     border-radius 4px
     height 300px
-    &:nth-of-type(1)
-      background #6C7A89
-    &:nth-of-type(2)
-      width 300px
-      h3, a, p
-        color #444
-
     h3
       color #fff
       padding 8px 0
@@ -165,6 +162,14 @@ p
       background rgba(255, 255, 255, 0.1)
     & > a:hover
       background rgba(22, 22, 22, 0.3)
+#free
+  background #6C7A89
+
+#feedback
+  width 225px !important
+  background #f0f0f0
+  h3, a, p
+    color #444 !important
 
 #mailing
   #mce-EMAIL
@@ -172,18 +177,7 @@ p
     border-radius 4px
     width 300px
     border 1px solid #ccc
-  #mc-embedded-subscribe
-    margin-top 20px
-    border-radius 4px
-    background #52b3d9
-    color #fff
-    font-weight 500
-    border none
-    padding 4px 10px
-    cursor pointer
-    &:hover
-      background #5C97BF
-      box-shadow 0 0 6px #666
+    margin-bottom 20px
 
 #footer
   margin-top 80px
