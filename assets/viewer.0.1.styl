@@ -9,16 +9,6 @@ noselect()
   margin-bottom 50px
   ul
     list-style none
-  .result
-    background #f6f6f6
-    border 1px solid #f0f0f0
-    border-bottom 0
-    width 100%
-    position absolute
-    height 400px
-    z-index 2
-    overflow auto
-    font-size 0.8em;
   .types
     noselect()
     bottom 0
@@ -50,3 +40,23 @@ noselect()
     border-top 1px solid #000
   .types.show li:not(:last-of-type):hover
     background #999
+
+.viewer .result
+  background #f6f6f6
+  border 1px solid #f0f0f0
+  border-bottom 0
+  width 100%
+  position absolute
+  height 400px
+  z-index 2
+  overflow auto
+  font-size 0.8em
+  line-height 20px
+  & .key
+    color #444
+  & .string
+    color #5c833b
+  & .null
+    color #a55840
+  & .number
+    color #33aca8

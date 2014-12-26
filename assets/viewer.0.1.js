@@ -7,8 +7,10 @@
     this.types = new Type(config.types, function() { self.reload(); });
     this.callback = container.getAttribute('data-key') + '_callback';
     window[this.callback] = function(data) {
-      text(self.result, JSON.stringify(data, null, 2));
       document.body.removeChild(self.script);
+      //outerHTML for IE bugs with newlines in <pre>
+      self.result.outerHTML = '<pre class=result>' + highlight(data, 1, false) + '</pre>';
+      self.result = container.children[0];
     };
     document.onkeydown = function(e) {
       e = (e || event);
@@ -25,7 +27,7 @@
   Viewer.prototype.reload = function() {
     var url = this.config.baseUrl || 'https://beta.teapi.io/v1/';
     url += this.types.value
-    url +=  '?callback=' + this.callback + '&key=' + this.config.key
+    url +=  '?callback=' + this.callback + '&key=' + this.config.key;
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
   };
 
@@ -122,6 +124,65 @@
   function cancelBubble(e) {
      if (e.stopPropagation) { e.stopPropagation(); }
      if (e.cancelBubble != null) { e.cancelBubble = true; }
+  };
+
+  var depths = [''];
+  function indent(depth) {
+    if (depth == depths.length) {
+      depths[depth] = new Array(depth+1).join('  ');
+    } else if (depth > depths.length) {
+      //a hole?
+      return new Array(depth+1).join('  ');
+    }
+    return depths[depth];
+  };
+
+  function highlight(node, depth, array) {
+    var str = array ? '[' : '{'
+    var first = true;
+    for (var k in node) {
+      if (first == false) {
+        str += ',';
+      } else {
+        first = false;
+      }
+      str += '\n' + indent(depth)
+      if (!array) {
+        str += '<span class=key>"' + k + '"</span>: ';
+      }
+      var value = node[k];
+      if (value == null) {
+        str += '<span class=null>null</span>';
+        continue;
+      }
+      if (value.constructor === Array) {
+        str += highlight(value, depth+1, true)
+        continue;
+      }
+      var type = typeof(value);
+      switch (type) {
+        case 'object':
+          str += highlight(value, depth + 1, false);
+          break;
+        case 'string':
+          str += '<span class=string>"' + escapeHTML(value) + '"</span>';
+          break;
+        default:
+          str += '<span class="' + type + '">' + value + '</span>';
+          break;
+      }
+    }
+    str += '\n' + indent(depth-1);
+    str += array ? ']' : '}'
+    return str;
+  };
+
+  var escaper = $$('div');
+  function escapeHTML(value) {
+    escaper.appendChild(document.createTextNode(value));
+    var html = escaper.innerHTML;
+    escaper.innerHTML = '';
+    return html;
   };
 
   window.TeapiViewer = Viewer;
