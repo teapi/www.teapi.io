@@ -10,6 +10,14 @@
       text(self.result, JSON.stringify(data, null, 2));
       document.body.removeChild(self.script);
     };
+    document.onkeydown = function(e) {
+      e = (e || event);
+      if ((e.keyCode || e.which) == 27) { self.minimize(); }
+    }
+    document.onclick = function() {
+      self.minimize();
+    }
+
     container.appendChild(this.types.node);
     this.reload();
   };
@@ -19,6 +27,10 @@
     url += this.types.value
     url +=  '?callback=' + this.callback + '&key=' + this.config.key
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
+  };
+
+  Viewer.prototype.minimize = function() {
+    this.types.minimize();
   };
 
   function Type(types, onChanged) {
@@ -47,10 +59,11 @@
   };
 
   Type.prototype.clicked = function(e) {
+    cancelBubble(e || window.event);
     if (toggleClass(this.node, 'show')) {
-      return true;
+      return false;
     }
-    var target = e ? e.target : event.srcElement;
+    var target = e ? e.target : window.event.srcElement;
     if (target.tagName == 'LI') {
       var name = target.getAttribute('data-name');
       if (name && name != this.value) {
@@ -59,6 +72,12 @@
         this.onChanged();
       }
     }
+    return false;
+  };
+
+
+  Type.prototype.minimize = function() {
+    removeClass(this.node, 'show');
   };
 
   function $$(tag, attributes) {
@@ -98,6 +117,11 @@
 
   function removeClass(node, className) {
     node.className = node.className.replace(new RegExp('\\b' + className + '\\b'), '');
+  };
+
+  function cancelBubble(e) {
+     if (e.stopPropagation) { e.stopPropagation(); }
+     if (e.cancelBubble != null) { e.cancelBubble = true; }
   };
 
   window.TeapiViewer = Viewer;
