@@ -187,7 +187,7 @@
             if (teapiLinkPattern.test(value)) {
               special = ' data-teapi=true';
             }
-            str += '<a class=link><a href="' + value + '"' + special + '>' + escapeHTML(value) + '"</a>';
+            str += '<a class=link><a href="' + value + '"' + special + '>' + escapeHTML(value) + '</a>';
           } else {
             str += '<span class=string>"' + escapeHTML(value) + '"</span>';
           }
