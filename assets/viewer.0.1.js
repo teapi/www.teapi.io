@@ -42,6 +42,7 @@
   Viewer.prototype.loadURL = function(url) {
     var joiner = url.indexOf('?') == -1 ? '?' : '&';
     url += joiner + 'callback=' + this.callback;
+    this.result.className += ' loading';
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
   };
 
