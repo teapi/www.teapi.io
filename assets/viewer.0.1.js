@@ -9,21 +9,25 @@
     this.result = append(container, $$('pre', {'class': 'result'}));
     this.searches = new SearchList(config.searches, function() { self.reload(); });
     this.callback = container.getAttribute('data-key') + '_callback';
+
     window[this.callback] = function(data) {
       self.url.value = self.script.getAttribute('src').replace(callbackPattern, '');
       document.body.removeChild(self.script);
       //outerHTML for IE bugs with newlines in <pre>
       self.result.outerHTML = '<pre class=result>' + highlight(data, 1, false) + '</pre>';
       self.result = container.children[1];
-      removeClass(self.container, 'loading')
+      removeClass(self.container, 'loading');
     };
+
     document.onkeydown = function(e) {
       e = (e || event);
       if ((e.keyCode || e.which) == 27) { self.minimize(); }
-    }
+    };
+
     document.onclick = function() {
       self.minimize();
-    }
+    };
+
     container.onclick = function(e) {
       var target = e ? e.target : window.event.srcElement;
       if (target.tagName == 'A' && target.getAttribute('data-teapi') == 'true') {
@@ -31,6 +35,11 @@
         self.loadURL(target.getAttribute('href'));
         return false;
       }
+    };
+
+    this.url.onkeydown = function(e) {
+      e = (e || event);
+      if ((e.keyCode || e.which) == 13) { self.loadURL(this.value); }
     }
 
     container.appendChild(this.searches.node);
@@ -47,6 +56,7 @@
   Viewer.prototype.loadURL = function(url) {
     var joiner = url.indexOf('?') == -1 ? '?' : '&';
     url += joiner + 'callback=' + this.callback;
+    removeClass(this.container, 'loading');
     this.container.className += ' loading';
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
   };
