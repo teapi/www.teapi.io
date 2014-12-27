@@ -7,9 +7,19 @@ noselect()
   position relative
   padding-bottom 430px
   margin-bottom 50px
+  &.loading
+    opacity 0.4
+  .url
+    width 100%
+    border 1px solid #eee
+    // border-bottom none
+    padding 7px 10px
+    box-sizing border-box
+    font-size 14px
+    background #fff
   ul
     list-style none
-  .types
+  .searches
     noselect()
     bottom 0
     position absolute
@@ -30,19 +40,20 @@ noselect()
       z-index 3
     &.show:before
       content: "\25B2";
-  .types li
-    padding 0 10px
+  .searches li
+    padding 0 50px 0 10px
     height 30px
     line-height 30px
-  .types.many li:last-of-type
+  .searches.many li:last-of-type
     border-top 1px solid #000
-  .types.many li:last-of-type
+  .searches.many li:last-of-type
     border-top 1px solid #000
-  .types.show li:not(:last-of-type):hover
+  .searches.show li:not(:last-of-type):hover
     background #999
 
 .viewer .result
   background #f6f6f6
+  box-sizing border-box
   border 1px solid #f0f0f0
   border-bottom 0
   width 100%
@@ -53,8 +64,6 @@ noselect()
   font-size 0.8em
   line-height 20px
   white-space  pre-wrap
-  &.loading
-    opacity 0.4
   & .key
     color #444
   & .string

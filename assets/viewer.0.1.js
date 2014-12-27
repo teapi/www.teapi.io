@@ -1,16 +1,21 @@
 (function () {
   'use strict';
+  var callbackPattern = /&callback=[^&]+/g
   function Viewer(container, config) {
     var self = this;
     this.config = config;
+    this.container = container;
+    this.url = append(container, $$('input', {'class': 'url'}));
     this.result = append(container, $$('pre', {'class': 'result'}));
-    this.types = new Type(config.types, function() { self.reload(); });
+    this.searches = new SearchList(config.searches, function() { self.reload(); });
     this.callback = container.getAttribute('data-key') + '_callback';
     window[this.callback] = function(data) {
+      self.url.value = self.script.getAttribute('src').replace(callbackPattern, '');
       document.body.removeChild(self.script);
       //outerHTML for IE bugs with newlines in <pre>
       self.result.outerHTML = '<pre class=result>' + highlight(data, 1, false) + '</pre>';
-      self.result = container.children[0];
+      self.result = container.children[1];
+      removeClass(self.container, 'loading')
     };
     document.onkeydown = function(e) {
       e = (e || event);
@@ -28,64 +33,64 @@
       }
     }
 
-    container.appendChild(this.types.node);
+    container.appendChild(this.searches.node);
     this.reload();
   };
 
   Viewer.prototype.reload = function() {
     var url = this.config.baseUrl || 'https://beta.teapi.io/v1/';
-    url += this.types.value
-    url += '?key=' + this.config.key;
+    var joiner = this.searches.url.indexOf('?') == -1 ? '?' : '&';
+    url += this.searches.url + joiner + 'key=' + this.config.key;
     this.loadURL(url);
   };
 
   Viewer.prototype.loadURL = function(url) {
     var joiner = url.indexOf('?') == -1 ? '?' : '&';
     url += joiner + 'callback=' + this.callback;
-    this.result.className += ' loading';
+    this.container.className += ' loading';
     this.script = document.body.appendChild($$('script', {src: url, type: 'text/javascript'}));
   };
 
   Viewer.prototype.minimize = function() {
-    this.types.minimize();
+    this.searches.minimize();
   };
 
-  function Type(types, onChanged) {
+  function SearchList(searches, onChanged) {
     var self = this;
     var currentNode = $$('li')
-    var node = $$('ul', {'class': 'types'});
-    for (var i = 0; i < types.length; i++) {
-      var type = types[i];
-      var option = $$('li', {'data-name': type.name});
-      text(option, type.name);
+    var node = $$('ul', {'class': 'searches'});
+    for (var i = 0; i < searches.length; i++) {
+      var search = searches[i];
+      var option = $$('li', {'data-url': search.url});
+      text(option, search.name);
       node.appendChild(option);
-      if (type.auto) {
-        this.value = type.name;
-        text(currentNode, type.name);
-      }
     }
-    node.appendChild(currentNode)
-    if (types.length > 1) {
+    if (searches.length > 1) {
       node.className += ' many';
       node.onclick = function(e) { self.clicked(e); }
     }
+
+    this.url = searches[0].url;
+    text(currentNode, searches[0].name);
+    node.appendChild(currentNode)
+
     this.node = node;
     this.config = config;
     this.onChanged = onChanged;
     this.currentNode = currentNode;
   };
 
-  Type.prototype.clicked = function(e) {
+  SearchList.prototype.clicked = function(e) {
     cancelBubble(e || window.event);
     if (toggleClass(this.node, 'show')) {
       return false;
     }
     var target = e ? e.target : window.event.srcElement;
     if (target.tagName == 'LI') {
-      var name = target.getAttribute('data-name');
-      if (name && name != this.value) {
-        this.value = name;
-        text(this.currentNode, name);
+      var url = target.getAttribute('data-url');
+      if (url && url != this.url) {
+        this.url = url;
+        text(this.currentNode, target.innerHTML);
         this.onChanged();
       }
     }
@@ -93,7 +98,7 @@
   };
 
 
-  Type.prototype.minimize = function() {
+  SearchList.prototype.minimize = function() {
     removeClass(this.node, 'show');
   };
 

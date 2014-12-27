@@ -16,24 +16,12 @@ var examples = {
   techstars: {
     key: '4800mh74u41s',
     baseUrl: 'http://sandbox.teapi.io/v1/',
-    types: [
-      {
-        name: 'classes',
-        indexes: [
-          {name: 'acquired', type: 'int'},
-          {name: 'failed', type: 'int'},
-          {name: 'funding', type: 'int'}
-        ]
-      },
-      {
-        name: 'companies',
-        auto: true,
-        indexes: [
-          {name: 'funding', type: 'int'},
-          {name: 'status', type: 'text'},
-          {name: 'city', type: 'text'}
-        ]
-      }
+    searches: [
+      {name: 'Companies sorted by funding (most to least)', url: 'companies?sort=-funding'},
+      {name: 'Acquired Boulder-based companies with 500K+ funding', url: 'companies?city=boulder&status=acquired&funding[gte]=500000'},
+      {name: 'Classes sorted by number of companies (least to most)', url: 'classes?sort=count'},
+      {name: 'Companies which participated in the Boston 2013 class', url: 'classes/Boston%202013%20Spring/companies'},
+      {name: 'Sendgrid details', url: 'companies/sendgrid'},
     ]
   }
 };
