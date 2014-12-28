@@ -1,0 +1,13 @@
+---
+layout: docs
+title: Documentation · Teapi
+---
+<h1>Introduction</h1>
+<p>Teapi is best understood when viewed as three distinct components. The first is the management console, used to configure your Teapi database, types and indexes. The second is the sync API, used to keep Teapi in sync with your data. The last is the read API, which your apps will query and consume.</p>
+
+<img src=/assets/docs/manage_types_ss.png alt="screen shot of creating a Links type" />
+<p>Setting up your database and its types is similar to creating a database schema, or deciding how you'll break down a spreadsheet. As an example, for a link aggregator, you might have two types: <code>Categories</code> and <code>Links</code>. <code>Categories</code> might be little more than a <code>name</code> while <code>Links</code> might have a number of properties such as <code>title</code>, <code>url</code> plus, most importantly, three indexes: <code>date_created</code>, <code>tags</code> and <code>popularity</code>. Indexes are important since they define how your data can be filtered and sorted. But you can always change and tweak these after the fact.</p>
+
+<p>We provide <a href="https://github.com/teapi">libraries for a number of languages</a> that you'll use to keep Teapi in sync with your system. We'll cover the various strategies in greater detail, but in general, you'll begin by doing a bulk upload of your existing data and then sync changes (additions, modifications and deletions) either as they happen, or in periodic batches.</p>
+
+<p>After you've completed the first two steps, your data will be available for consumption from mobile applications, websites and other systems. Since Teapi exposes your data through the staggeringly popular approach of JSON over HTTP (a web service), there are a plethora of tools and libraries available, including built-in support in all modern smartphones and tablets as well as popular JavaScript libraries. The <a href="/examples">example page</a> is a good place to get a feel for exactly how this component looks like.</p>

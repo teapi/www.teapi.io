@@ -1,0 +1,43 @@
+---
+layout: docs
+title: Documentation · Teapi
+---
+<h1>Philosophy</h1>
+<p>Teapi is designed for a common scenario: where read and readers outnumber writes and writers. As an example, consider a shopping site with an internal facing content management system (CMS). The CMS might have only a handful of staff managing thousands of product updates a day, while feeding a website that receives millions of daily page views.</p>
+
+<p>The traditional approach to designing such systems has been to build a large monolithic application, responsible for both internal tooling (such as the CMS) as well as consumer facing properties (such as the website). There are advantages to such an approach. For one thing, the operational management of a single system is often simpler (until it isn't). For another, monolithic systems, by their very nature, aren't latency-challenged the way systems built using service oriented architecture (SOA) often are.</p>
+
+<p>Yet anyone who's built, maintained, or even just used a large and/or old system, knows that they can be an experience in frustration and inefficiency. Although it makes us cringe to say it, what it comes down to, what we'd distill Teapi's philosophy to, is <strong>scale</strong>.</p>
+
+<h2>Scaling Beyond The Browser</h2>
+
+<p>First and foremost, Teapi helps you realize the promise of an API-driven world. The most obvious advantage of this is having a single data stream for both your mobile applications and website. Monolithic apps have traditionally been web/HTML focused and thus less than optimal for mobile applications or integration with other systems. Presentation-agnostic, queryable, fast and highly-available data is your foundation for building more engaging applications across all devices.</p>
+
+<p>In a web-centric world, it's difficult to leverage your system across devices. In an API-driven world, it's difficult to imagine the ways your data might be put to use.</p>
+
+<h2>Scaling Complexity</h2>
+<p>Scale is also about managing complexity. Since they do everything, monolithic systems can be difficult to maintain and be temperamental. As a generalization, they tend to accumulate more cruft, have less test coverage and demand a serious investment before new employees are productive. Eventually, all monolithic systems are proceeded by a monolithic-rewrite. But if the solution to a large and complex system is smaller and better focused components, then the rewrite itself must come in the form of small and focused steps. Specifically, many projects want to update their website and mobile presence, but can only do so by gutting their internal tooling. Your CMS might have warts, but your staff is efficient with it and will be far more miserable with a half-baked replacement.</p>
+
+<p>By decoupling your internal data from your consumer-facing data, a rewrite can happen in smaller phases, which means:</p>
+
+<ul>
+  <li>You get to focus on the most pressing need (say, an iOS app) without having a ton of dependencies,</li>
+  <li>You get smaller scoped projects, which are less likely to go wrong or fall behind schedule and,</li>
+  <li>You can keep your internal tools, with their many subtle rules, until you have suitable replacements.</li>
+</ul>
+
+<p>Not everything is a chasm!</p>
+
+<h2>Performance</h2>
+<p>While decoupled services can face a unique set of performance challenges, they also provide an opportunity to design for speed and higher availability. The core for this stems from the asynchronous link between where most data is written (e.g. your CMS) and where most of it is read (e.g. Teapi). Patterns which are shunned with monolithic systems, such as denormalization, often emerge as the simplest design when using services. Focused services must balance few contradicting goals.</p>
+
+<p>Another powerful pattern is the ability to pro-actively purge caches when objects change. This is certainly doable with monolithic systems. In fact, it's much easier to achieve. But it never feels quite right; always feels like you're overburdening the code. With asynchronous messaging, every unit exists distinctly, can be tested distinctly, and can fail with as much or little rippling as is appropriate. Teapi does some pro-active purging and we plan to continue tweaking our caching and purging algorithms.</p>
+
+<p>Whether explicit or not, the vast majority of systems have at least two distinct data models - one focused around writes and the other around reads. Oddly, many systems are write-optimized yet struggle with orders of magnitude more reads than writes. (It isn't that odd, write-optimized systems is how we've all been taught to build systems because it's easier to get some important stuff right that way, like consistency). Teapi's read API stores your data in a read-optimized structure. It avoids costly operations, such as excessive serialization, and tries to reach a reasonable balance between freshness and cacheability.</p>
+
+<p>Finally, as we embrace the asynchronous link between the two worlds, it becomes more natural to achieve better availability. Asynchronicity as a fundamental tenant means that keeping 20 slaves up to date is more or less as complicated as keeping one up to date. The infrastructure that you use to push data to Teapi can be reused internally to keep distributed slaves up to date.</p>
+
+<h2>Challenges</h2>
+<p>At best, the above requires that we change how we look at data as well as how we build systems. On the one hand, we could describe this as more complex: moving parts. On the other hand, each individual part should be simpler and more cohesive. More systems means more failure points, but it can also isolate critical systems from failing secondary systems.</p>
+
+<p>For Teapi the challenge is executing on our beliefs in a generalized manner. We want our system to be useful, fast and reliable for a broad range of users; but generalization and performance aren't good allies. We're very pleased with our current performance, but see no reason to stop improving. Moving forward, we believe that we can collect and analyze usage patterns on a per-customer basis in order to automatically apply low level tweaks to how we've organized your data. Some people call that big data machine learning heuristics, but we just call it fun.</p>
