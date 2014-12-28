@@ -1,9 +1,11 @@
 body
   background #fff url('/assets/faux.gif') repeat-y
 
+pre{margin:0;padding:0;padding:5px;color:#000;overflow-x:scroll;font-size:14px;margin-bottom:20px;line-height:22px;background:#f6f6f6;border:1px solid #eee;border-radius:4px}pre,code{font-family:'Monaco','Consolas',monospace}pre .comment{color:#7e7e7e;font-style:italic}pre .constant,pre .integer{color:#18838a;}pre .storage{color:#0000a1}pre .string{color:#8e0022}pre .keyword,pre .selector{color:#0000a1;font-weight:bold}pre .parent{font-style:italic}pre .entity,pre .meta{color:#3e853f}pre .support{color:#192140}pre .variable.global,pre .variable.class,pre .variable.instance{color:#3e853f}
+
 #docnav
   font-size 0.9em
-  float left
+  position fixed
   width 250px
   a
     display block
@@ -13,9 +15,13 @@ body
   a:hover
     color #2574A9
     background #e0e0e0
+  ul a
+    padding-left 30px
+  ul ul a
+    padding-left 50px
 
 #doc
-  margin 20px 50px 150px 270px
+  margin 20px 50px 0px 270px
   img
     max-width 40%
     border 1px solid #FDE3A7
@@ -26,7 +32,6 @@ body
   ul
     list-style disc
     margin 0 0 20px 40px
-
   h1, h2, h3
     font-size 22px
     color #22313F
@@ -34,6 +39,8 @@ body
 
   h2
     font-size 18px
+    padding-top 20px
+    border-top 1px solid #ddd
 
   h3
     font-size 16px
@@ -45,6 +52,32 @@ body
     padding 2px 5px
     border 1px solid #eee
     border-radius 4px
+
+  pre
+    margin-bottom 20px
+
+  .important
+    padding 5px
+    border 1px solid #ffdddd
+    border-radius 4px
+    margin-bottom 20px
+    background #fff6f6
+  .important p:last-of-type
+    margin-bottom 0
+
+
+  .pager
+    border 1px solid #ddd
+    border-width 1px 0
+    padding 20px 0
+    margin 50px 0 20px
+    overflow auto
+    .prev:before
+      content '« '
+    .next
+      float right
+      &:after
+        content ' »'
 
 // #footer
 //   bottom 0

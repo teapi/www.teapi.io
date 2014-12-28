@@ -1,0 +1,88 @@
+---
+layout: docs
+title: Types · Teapi
+sub: types
+---
+<h1>Types</h1>
+<p>Types represent a distinct entity within your system. Loosely speaking, a type is much like a database table. An important difference though is that a type is meant to be a denormalized and view-driven. For example, you might model <code>articles</code> and <code>tags</code> as two separate tables, but you'd have a single type, <code>articles</code>, which had an embedded array of <code>tags</code>.</p>
+
+<p>The denormalized nature of a type cannot be overly stated. In our experience, it is much better to have rich (even fat) web service responses versus forcing clients to make multiple calls and piecing data together. For one thing, a single API call, even if verbose, will almost always outperform multiple calls (often by a large margin). For another, when every client has to do the same work (requesting and merging multiple calls), you're duplicating logic better centralized.</p>
+
+<p>When you sync a document of a specific type, you'll sync this denormalized representation, which, for the most part, is how it'll be exposed via the Read API. For example, given a type named <code>books</code> (which would be accessible at https://XXX.teapi.io/v1/<strong>books</strong>), you might sync a document that looks like:</p>
+
+<pre data-language=json>
+{
+  "id": 4492938,
+  "name": "Dune",
+  "description": "......",
+  "published": {
+    "date": 1965,
+    "publisher": "Chilton Books"
+  },
+  "type": "science-fiction",
+  "author:" {
+    "name": "Frank Herbert",
+    "id": "herbertf",
+    "url": "https://XXX.teapi.io/v1/authors/herbertf"
+  },
+  "tags": ["space", "opera", "hugo"]
+}
+</pre>
+
+<p>While you can use whatever valid JSON structure you want, you do need to configure the primary key, any indexes you'll use for filtering, and optionally a parent relationship.</p>
+
+<a name=pk></a>
+<h2>Primary Key</h2>
+<p>Every document must have a primary key which must be unique within its type. The primary key can be an integer (int), a string (text) or case-insensitive string (itext). For the above book document, the primary key field would be <code>id</code> and the type would be <code>int</code>.</p>
+
+<p>The id field should likely map directly to your own internal ID (whether that's an auto-incrementing ID or a GUID, it doesn't matter). Every document will be directly accessible. Here's a real example: <a href="https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s">https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s</a> (the id in this case is <code>sendgrid</code>).</p>
+
+<a name=indexes></a>
+<h2>Indexes</h2>
+<p>Indexes define how you'll query and sort documents within a type. The index field is the key of the value to index within the JSON document. For example, we'd likely want to be able to filter and sort by date, so we'd add an index on <code>published.date</code> of type <code>int</code>. With this index in place, we could sort by date using <code>sort=published.date</code>, which is a bit of a mouthful. To solve this, we can give this index an alias, <code>date</code>. In other words, the index field is the key to the value to index in the document. The optional alias is the parameter name in the Read API.</p>
+
+<p>It's worth noting that the <code>text</code> and <code>itext</code> types don't do full text searching. They are meant for short values, such as <code>category</code> or <code>status</code>. Values longer than 100 characters won't be indexed. Full text search <em>is</em> a feature we're eager to tackle.</p>
+
+<p>An index can also be created on an array (an array of integers, floats, booleans, strings or dates). Array indexes can't be used for sorting, and also have a size limit. They're meant to be used on fields such as <code>tags</code>.</p>
+
+<p>Integer, floats and dates indexes support filters such as greater than and less than or equal. Strings, bools and all arrays support equality checks (you can sort on either a string or bool).</p>
+
+<h2>Relationships</h2>
+<p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>
+
+<p>A relationship implicitly creates an index. While it's possible to use this index like any other index, the purpose of relationships is to allow for more intuitive URL structure. For example, if we were to define a relationship on <code>books</code> to <code>authors</code> on the <code>author.id</code> field, we'd be able to get a list of books written by Frank Herbert via: https://ZYX.teapi.io/v1/authors/herbertf/books?key=XYZ (as well as apply any additional book filters to retrieve a subset).</p>
+
+<p>There are two types of relationship: simple and polymorphic.</p>
+
+<a name=simple></a>
+<h3>Simple Relationships</h3>
+<p>A simple relationship is used when the child document can only belong to one type. This is likely the most common type of relationship you'll use. Like the primary key, it has no alias as it shouldn't be queried directly, but it can an array. It's easy to see how this might be useful: books with co-authors.</p>
+
+<p>In the above example, our parent key field could be <code>author.id</code> of type <code>text</code>.</p>
+
+<a name=poly></a>
+<h3>Polymorphic Relationships</h3>
+<p>Polymorphic relationships are used when a type can belong to different parent types. A common example are <code>comments</code>, which could belong to either <code>books</code> or <code>authors</code>.</p>
+
+<p>A document containing a polymorphic relationship needs both its parent id as well as its parents type:</p>
+
+<pre data-language=json>
+{
+  ...
+  "parent:" {
+    "id": 39958,
+    "type": "book",
+    ...
+  }
+  ...
+}
+</pre>
+
+<p>Given the above snippet, the parent key field would be <code>parent.id</code>, the parent type field would be <code>parent.type</code>. We'd define two values: <code>book</code> associated to the <code>books</code> parent type and <code>author</code> associated to the <code>authors</code> parent type.</p>
+
+<p>Remember, your types aren't set in stone. That said, changes made to types with hundreds of thousands of documents can take a while to propagate (the old structure remains active until the new one is ready). The best thing to do is to create a type with an name and primary key, upload a small sample of documents (~20) and play with various indexes and relationships.</p>
+
+<div class=pager>
+  <a href=/docs/databases class=prev>databases</a>
+  <a href=/docs/sync class=next>synchronizing data</a>
+</div>

@@ -4,8 +4,38 @@ layout: default
 <link href=/assets/docs/docs.css rel=stylesheet type=text/css>
 
 <ul id=docnav>
-  <li><a href=/docs>introduction</a>
-  <li><a href=/docs/philosophy>philosophy</a>
+  <li><a href=/docs>introduction</a></li>
+  <li>
+    <a href=/docs/databases>databases</a>
+    {% if page.sub == 'databases' %}
+    <ul>
+      <li><a href=#readapi>read api</a></li>
+      <li><a href=#syncapi>sync api</a></li>
+    </ul>
+    {% endif %}
+  </li>
+  <li>
+    <a href=/docs/types>types</a>
+    {% if page.sub == 'types' %}
+    <ul>
+      <li><a href=#pk>primary key</a></li>
+      <li><a href=#indexes>indexes</a></li>
+      <li><a href=#relationships>relationships</a>
+        <ul>
+          <li><a href=#simple>simple</a></li>
+          <li><a href=#poly>polymorphic</a></li>
+        </ul>
+      </li>
+    </ul>
+    {% endif %}
+  </li>
+  <li>
+    <a href=/docs/sync>synchronizing data</a>
+  <li>
+  <li>
+    <a href=/docs/readapi>using the read api</a>
+  </li>
+  <li><a href=/docs/philosophy>philosophy</a></li>
 </ul>
 <div id=doc>{{ content }}</div>
 

@@ -1,0 +1,61 @@
+---
+layout: docs
+title: Databases · Teapi
+sub: databases
+---
+<h1>Databases</h1>
+<p>Your database has a few important properties, as well as being the container for types and indexes, which define your data and how you intend to query it.</p>
+
+<p>When you create an account, a new database is automatically created for you. The database settings are available in the <code>settings</code> menu of the <a href="https://manage.teapi.io/">management console</a>. You can name your database anything you want, the name is for your own sake. The Read API and Sync API portion of your database's settings are very important.</p>
+
+<a name=readapi></a>
+<h2>Read API</h2>
+<p>The Read API section tells you the hostname you can connect to in order to consume your data (you can use HTTP or HTTPS). It also lets you create and remove access keys. By default, your database has no access keys and thus its data cannot be consumed.</p>
+
+<p>Typically you'll want to create an access key per client application. In other words, you'll want one for your iOS app, one for your Android app and one for your web app. This is important for two reasons. First, if you need to revoke a key, you'll minimize the impact. Second, we generate usage reports broken down per-key.</p>
+
+<p>There are two types of access keys: those with a secret and those without. You can use a mix of both. Keys without a secret are sent in the query string of each request using the <code>key</code> parameter. Keys with a secret require that the request include a signed <code>Authorization</code> and a valid <code>Date</code> headers.</p>
+
+<div class=important>
+  <p><strong>Which type of key should you choose?</strong><p>
+
+  <p>While secrets are never transmitted, it isn't hard for a programmer to disassemble your application and extract the secret.</p>
+  <p>For websites, signed keys are far more trouble than they are worth. For applications, signed keys provide a little more protection and are easy to implement, so there's little reason not to use them (even though the level of security they provide is dubious).</p>
+  <p>Moving forward, we'll expand our reporting to include more usage insight as well as better tools to track and try and block potential abusers (it's an uphill battle though, like trying to stop screen scraping).</p>
+</div>
+
+<p>A request using a secretless-key looks like:</p>
+
+<pre>
+https://sandbox.teapi.io/v1/companies?sort=-funding&<strong>key</strong>=4800mh74u41s
+</pre>
+
+<p>The same request using a key with secret, would not have the <code>key</code> parameter, but would have the following headers:</p>
+
+<pre>
+Authorization: HMAC-SHA256 Credential=4800mh74u41s,Signature=A-SIGNATURE
+Date: CURRENT_DATE
+</pre>
+
+<p>The signing algorithm is similar to the one used by Amazon's AWS. We use the same scheme for our sync API. Here's the Node implementation:</p>
+
+<pre data-language=javascript>
+var hasher = crypto.createHmac('sha256', this.secret)
+hasher.update(url);
+hasher.update(date);
+if (body) { hasher.update(body); }
+return 'HMAC-SHA256 Credential=' + this.key + ',Signature=' + hasher.digest('hex');
+</pre>
+
+<p>You can also look at our <a href="https://github.com/teapi/ruby-client/blob/master/lib/teapi/sender.rb">ruby</a> and <a href="https://github.com/teapi/go-client/blob/master/teapi.go">go</a> versions (look for the <code>sign</code> function).</p>
+
+<a name=syncapi></a>
+<h2>Sync API</h2>
+<p>Where the Read API is meant to have many consumers and focused on reads, the Sync API is used only by your systems and focuses on writes. Since you're in full control of the systems which use the Sync API, a key with secret is both mandatory and useful (the use of HTTPS is also mandatory).</p>
+
+<p>The <a href=/docs/sync>synching chapter</a> goes into details about the sync process. From the management console you'll get the information needed to sync (host, key and secret) as well as the ability generate a new secret.</p>
+
+<div class=pager>
+  <a href=/docs/ class=prev>introduction</a>
+  <a href=/docs/types class=next>types</a>
+</div>
