@@ -4,6 +4,29 @@ title: Read API · Teapi
 sub: readpi
 ---
 <h1>Using The Read API</h1>
+<p>Once you've configured your database, defined your types and indexes and uploaded some documents, you're ready to query the API. This should be familiar to anyone who has used a JSON-producing web service before.</p>
+
+<p>All requests to the read API must have at least two components: the type being requested and the read key. For a key without a secret, the <code>key</code> query string parameter is used. Here's a live example:</p>
+
+<pre>
+https://sandbox.teapi.io/v1/companies?sort=-funding&<strong>key</strong>=4800mh74u41s
+</pre>
+
+<p>Requests to the read API using a key with a secret involves setting the <code>Authorization</code> and <code>Date</code> headers. The implementation is similar to the one used by AWS and others. It's also the same approach we used to authenticate requests to the Sync API, so you can see the implementation in our <a href="https://github.com/teapi/ruby-client/blob/master/lib/teapi/sender.rb">ruby</a>, <a href="https://github.com/teapi/node-client/blob/master/lib/client.js">node</a> and <a href="https://github.com/teapi/go-client/blob/master/teapi.go">go</a> versions (look for the <code>sign</code> function).</p>
+
+<p>Beyond this, you use index names (or the alias if you provided one) to filter results via the querystring. All index types support equality, in the form of <code>INDEXNAME=VALUE</code> and <code>INDEXNAME[ne]=VALUE</code>. Numeric and date indexes also support range filters, such as <code>price[lt]=10</code>. The allowed operators are: <code>lt</code>, <code>lte</code>, <code>gt</code> and <code>gte</code>. You can use the special value <code>_null</code> to get values equal to NULL, <code>name=_null_</code> or not equal to null <code>name[ne]=_null_</code>.</p>
+
+<p>Besides <code>key</code>, there are a handful of built-in values.</p>
+
+<p><code>sort</code> is used to sort using the specified index, ascending: <code>sort=name</code> or descending: <code>sort=-name</code>.</p>
+
+<p><code>perpage</code> controls the number of records. The default is 25, but the value can be anything from 1 to 50.</p>
+
+<p><code>after</code> and <code>before</code> are used to control paging. These are values you won't calculate but rather get from the JSON result itself.</p>
+
+<p><code>callback</code> is used to make a <a href="https://en.wikipedia.org/wiki/JSONP">JSONP requests</a>, which is useful for making otherwise prohibited cross domain requests from the browser.</p>
+
+
 
 <div class=pager>
   <a href=/docs/sync class=prev>synchronizing data</a>

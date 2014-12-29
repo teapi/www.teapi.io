@@ -46,7 +46,7 @@ end
 <h3>Asynchronous With Messaging</h3>
 <p>If you're already using some type of messaging infrastructure to track changes to your objects, then synchronization to Teapi is simply a matter of hooking up a new consumer to the proper events.</p>
 
-<p>It's hard to go into details as there are many different types of queues and messaging systems and everyone sets them up differently. If you're already a messaging-driven organization you'll probably know how to integrate Teapi. If you aren't, it can take quite a bit of effor to get setup. While we're huge fans of message-driven architecture, we'd suggest that you consider simply using your database as a poor man's queue instead.</p>
+<p>It's hard to go into details as there are many different types of queues and messaging systems and everyone sets them up differently. If you're already a messaging-driven organization you'll probably know how to integrate Teapi. If you aren't, it can take quite a bit of effort to get setup. While we're huge fans of message-driven architecture, we'd suggest that you consider simply using your database as a poor man's queue instead.</p>
 
 <a name=database></a>
 <h3>Asynchronous With A Database</h3>
@@ -91,7 +91,7 @@ conn.exec("update teapi_states set last_sync =  $1 where type = 'people'", now)
 
 <p>To properly capture deletes, your system will have to do soft-deletes (not actually remove the row, but instead flag it, likely with a <code>deleted_at</code> column). When <code>deleted_at</code> isn't null, you know that the document must be deleted, rather than updated with Teapi.</p>
 
-<p>Much of the database sycnhronization code is boilerpoint so, moving forward, we'll hopefully be able to provide a bit of simple code to make it easier to get started. In the meantime, we're <a href="mailto:support@teapi.io">happy to help</a>  however we can.</p>
+<p>Much of the database synchronization code is boilerplate so, moving forward, we'll hopefully be able to provide a bit of simple code to make it easier to get started. In the meantime, we're <a href="mailto:support@teapi.io">happy to help</a>  however we can.</p>
 
 <div class=pager>
   <a href=/docs/sync class=prev>synchronizing data</a>
