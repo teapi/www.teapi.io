@@ -6,8 +6,14 @@ title: Examples · Teapi
 <script src=/assets/viewer.0.1.js></script>
 <div class=section>
   <h2>Techstars Statistics</h2>
-  <p>The Techstars Statistics is a tiny data set which provides an overview of companies invested in by Techstars. The data comes from the <a href="http://www.techstars.com/companies/stats/">Techstars Stats web page</a></p>
+  <p>The Techstars Statistics is a tiny data set which provides an overview of companies invested in by Techstars. The data comes from the <a href="http://www.techstars.com/companies/stats/">Techstars Stats web page</a>.</p>
   <div class=viewer data-key=techstars></div>
+</div>
+
+<div class=section>
+  <h2>Nutritional Information</h2>
+  <p>The nutritional information API is an import from USDA-provided nutritional information for a little over 8000 food items. The data comes from <a href="https://www.ars.usda.gov/Services/docs.htm?docid=8964">The USDA's website</a>.</p>
+  <div class=viewer data-key=nutritional></div>
 </div>
 
 <script>
@@ -22,7 +28,18 @@ var examples = {
       {name: 'Companies which participated in the Boston 2013 class', url: 'classes/Boston%202013%20Spring/companies'},
       {name: 'Sendgrid details', url: 'companies/sendgrid'},
     ]
+  },
+  nutritional: {
+    key: '75oxwlybwagw',
+    baseUrl: 'https://sandbox.teapi.io/v1/',
+    searches: [
+      {name: 'Most calory-dense food with at least some fiber', url: 'foods?sort=-energy&fiber[gt]=0'},
+      {name: 'Most B12 but with little protein', url: 'foods?sort=-b12&protein[lt]=2'},
+      {name: 'Highest % of refuse (inedible materials, like shells)', url: 'foods?sort=-refuse'},
+      {name: 'Peanute Butter', url: 'foods/16167'}
+    ]
   }
+
 };
 var divs = document.getElementsByTagName('div');
 for (var i = 0; i < divs.length; i++) {
