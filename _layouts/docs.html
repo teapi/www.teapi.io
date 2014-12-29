@@ -31,7 +31,28 @@ layout: default
   </li>
   <li>
     <a href=/docs/sync>synchronizing data</a>
+    {% if page.sub == 'sync' %}
+    <ul>
+      <li><a href=#meta>meta data</a></li>
+      <li><a href=#bulk>bulk updates</a></li>
+    </ul>
+    {% endif %}
+  </li>
   <li>
+    <a href=/docs/integration>integration</a>
+    {% if page.sub == 'integration' %}
+    <ul>
+      <li><a href=#synchronous>synchronous</a></li>
+      <li>
+        <a href=#asynchronous>asynchronous</a>
+        <ul>
+          <li><a href=#messaging>messaging</a></li>
+          <li><a href=#database>database</a></li>
+        </ul>
+      </li>
+    </ul>
+    {% endif %}
+  </li>
   <li>
     <a href=/docs/readapi>using the read api</a>
   </li>

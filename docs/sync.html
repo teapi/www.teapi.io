@@ -4,8 +4,52 @@ title: Synchronizing Data · Teapi
 sub: sync
 ---
 <h1>Sychronizing Data</h1>
+<p>Changes made to data within your system must be synchronized to Teapi. There are a handful of ways to achieve this, but they all rely on using Teapi's Sync API through <a href="https://github.com/teapi">one of our libraries</a>. The API and libraries are small and simple, allowing you to create, update or delete documents individually or in bulk.</p>
+
+<p>All of our libraries must first be configured using the Sync API settings found in the management console. For a Ruby example, after installing the teapi gem, you'd do:</p>
+
+<pre data-language=ruby>
+Teapi.configure do |config|
+  config.host =  'HOST'
+  config.sync_key = 'KEY'
+  config.sync_secret = 'SECRET'
+end
+</pre>
+
+<p>Once configured, documents can be synched. Each library's README explains how to use the specific library, but they're all quite similar. For example, to create a new document, you'd do: </p>
+
+<pre data-language=javascript>
+# ruby
+Teapi::Documents.create('people', {id: 4, name: 'leto atreides', power: 9001})
+
+// node
+teapi.documents.create('people', {id: 4, name: 'leto atreides', power: 9001})
+
+// go
+t.Documents.Create("people", teapi.Doc(user))
+</pre>
+
+<a name=meta></a>
+<h2>Meta Data</h2>
+<p>When we talked about <a href="/docs/types/#indexes">types</a> we saw how indexes are created by specifying the key of the value within the document. Sometimes you may want to index a value which isn't part of the publically accessible document. You may, for example, have an internal popularity feature which is meaningless to consumers and best left un-exposed.</p>
+
+<p>For this reason, when creating or updating a document, it's possible to provide an additional meta data field. For example, in Node, we'd do:</p>
+
+<pre data-language=javascript>
+teapi.documents.update('people', {id: 4, name: 'leto atreides', power: 9001}, {power: 29485, rank: 3})
+</pre>
+
+<p>Given 3 indexes, on <code>id</code>, <code>power</code> and <code>rank</code>, the values <code>4</code>, <code>29485</code> and <code>3</code> would be indexed respectively. In other words, an index first looks at the meta data, and if there is no meta data, or if the specific field is not in the meta data, the value is retrieved from the main document.</p>
+
+<div class=important>
+  <p>Meta data isn't meant as a secure/secret storage for values. There's no reason to have un-indexed meta data, and once indexed, queries can be made to reveal the underlying value. Meta data is only meant to help keep your documents neat and clean.</p>
+</div>
+
+<a name=bulk></a>
+<h2>Bulk Updates</h2>
+<p>While sending updates a document at a time is fine, each library also exposes a bulk update method. Up to 1000 documents can be created/insertd at a time, along with up to 1000 deletions. Bulk updates perform much better and should be used whenever possible.</p>
 
 <div class=pager>
   <a href=/docs/types class=prev>types</a>
-  <a href=/docs/readapi class=next>using the read api</a>
+  <a href=/docs/integration class=next>integration</a>
 </div>

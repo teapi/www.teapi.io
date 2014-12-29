@@ -1,0 +1,99 @@
+---
+layout: docs
+title: Integration · Teapi
+sub: integration
+---
+<h1>Integration</h1>
+<p>Although the Teapi libraries make it easy to keep Teapi in sync with your data, you have to decide when and how to send updates.</p>
+
+<p>There are two main approaches, each with their own advantages and drawbacks: synchronously and asynchronously. While we favor the asynchronous, both will work.</p>
+
+<a name=synchronous></a>
+<h2>Synchronous</h2>
+<p>Synchronous replication is the more straightforward of the two approaches. It involves changing your existing code to keep Teapi in sync with changes as they happen.</p>
+
+<p>If your system was written using Ruby on Rails, for example, you might make use of ActiveRecord's callback (<code>after_save</code>, <code>after_destroy</code>) to sync with Teapi:</p>
+
+<pre data-language=ruby>
+class Book < ActiveRecord::Base
+  after_destroy :delete_from_teapi
+  ...
+
+  private
+  def delete_from_teapi
+    Teapi::Documents.delete('books', self.id)
+  end
+end
+</pre>
+
+<p>While straightforward, this approach isn't without drawbacks. The most serious of which is the tight coupling to Teapi. Any problems synchronizing with Teapi brings your system to a halt.</p>
+
+<p>There are other smaller advantages and disadvantages to this approach, but they all come down to simplicity vs tight coupling.</p>
+
+<a name=asynchronous></a>
+<h2>Asynchronous</h2>
+<p>The asynchronous approach is, in our opinion, considerably more attractive. For one thing, it removes an external dependency from the very important business of letting you update your data.</p>
+
+<p>Doing things asynchronously also means you can do more work, more denormalization, more aggregation, without the guilt of slowing a user-initiated request. It also lets you take advantage of bulk synchronization.</p>
+
+<p>Finally, the asynchronous approach can be implemented without having to make changes to your existing code. You'll still have to write some code, but it can be a standalone script which won't introduce bugs or complexity into your business-critial path.</p>
+
+<p>There are two main drawbacks to asynchronous synchronization. The first is that it'll introduce more delay between when a change is made and when it's visible. How large a delay depends on how often you process changes, but it could be anywhere from a few seconds to minutes. The other drawback is that it's a bit more complicated to implement (but again, that complexity is isolated and thus overall system complexity is less).</p>
+
+<p>Leveraging asynchronous synchronization requires that you either have a messaging system or that you use your database as a queue.</p>
+
+<a name=messaging></a>
+<h3>Asynchronous With Messaging</h3>
+<p>If you're already using some type of messaging infrastructure to track changes to your objects, then synchronization to Teapi is simply a matter of hooking up a new consumer to the proper events.</p>
+
+<p>It's hard to go into details as there are many different types of queues and messaging systems and everyone sets them up differently. If you're already a messaging-driven organization you'll probably know how to integrate Teapi. If you aren't, it can take quite a bit of effor to get setup. While we're huge fans of message-driven architecture, we'd suggest that you consider simply using your database as a poor man's queue instead.</p>
+
+<a name=database></a>
+<h3>Asynchronous With A Database</h3>
+<p>Unless you're already running a messing system, like RabbitMQ or Resque, we recommend you use your database as a poor man's queue. If you look around the web, you'll find plenty of people saying that a database as a queue is <em>evil</em> and an <em>anti pattern</em>. The reality is that, for simple cases, it's pretty easy to get right and it uses technology that you already know and have running.</p>
+
+<p>Using your database as a queue comes down to having an <code>updated_at</code> timestamp column in your tables and a simple <code>teapi_states</code> table.</p>
+
+<p>The <code>teapi_states</code> table looks like:</p>
+
+<pre data-language=text>
+create table teapi_states (
+  type text not null primary key,
+  last_sync timestamp
+)
+</pre>
+
+<p>With this, you're able to get all changes people since the last sync:</p>
+
+<pre data-language=ruby>
+select_sql = <<-eos
+select *
+  from people
+  where updated_at >= (
+    select coalesce(last_sync, '1980-1-1'::timestamp)
+      from teapi_states
+      where type == 'people'
+  )
+    and updated_at < $1
+eos
+
+now = Time.now
+# get all the people who have changed since the last sync
+results = conn.exec(select_sql, now)
+
+# process (which might involves other hits to the DB or other services)
+
+# send bulk update to teapi
+
+# on success, update our state
+conn.exec("update teapi_states set last_sync =  $1 where type = 'people'", now)
+</pre>
+
+<p>To properly capture deletes, your system will have to do soft-deletes (not actually remove the row, but instead flag it, likely with a <code>deleted_at</code> column). When <code>deleted_at</code> isn't null, you know that the document must be deleted, rather than updated with Teapi.</p>
+
+<p>Much of the database sycnhronization code is boilerpoint so, moving forward, we'll hopefully be able to provide a bit of simple code to make it easier to get started. In the meantime, we're <a href="mailto:support@teapi.io">happy to help</a>  however we can.</p>
+
+<div class=pager>
+  <a href=/docs/sync class=prev>synchronizing data</a>
+  <a href=/docs/readapi class=next>using the read api</a>
+</div>
