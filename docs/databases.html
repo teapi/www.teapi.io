@@ -24,30 +24,7 @@ sub: databases
   <p>Moving forward, we'll expand our reporting to include more usage insight as well as better tools to track and try and block potential abusers (it's an uphill battle though, like trying to stop screen scraping).</p>
 </div>
 
-<p>A request using a secretless-key looks like:</p>
-
-<pre>
-https://sandbox.teapi.io/v1/companies?sort=-funding&<strong>key</strong>=4800mh74u41s
-</pre>
-
-<p>The same request using a key with secret, would not have the <code>key</code> parameter, but would have the following headers:</p>
-
-<pre>
-Authorization: HMAC-SHA256 Credential=4800mh74u41s,Signature=A-SIGNATURE
-Date: CURRENT_DATE
-</pre>
-
-<p>The signing algorithm is similar to the one used by Amazon's AWS. We use the same scheme for our sync API. Here's the Node implementation:</p>
-
-<pre data-language=javascript>
-var hasher = crypto.createHmac('sha256', this.secret)
-hasher.update(url);
-hasher.update(date);
-if (body) { hasher.update(body); }
-return 'HMAC-SHA256 Credential=' + this.key + ',Signature=' + hasher.digest('hex');
-</pre>
-
-<p>You can also look at our <a href="https://github.com/teapi/ruby-client/blob/master/lib/teapi/sender.rb">ruby</a> and <a href="https://github.com/teapi/go-client/blob/master/teapi.go">go</a> versions (look for the <code>sign</code> function).</p>
+<p>The <a href="/docs/readapi">Read API chapter</a> covers the implementation detail of both approaches.</p>
 
 <a name=syncapi></a>
 <h2>Sync API</h2>
