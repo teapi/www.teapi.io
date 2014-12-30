@@ -4,7 +4,15 @@ layout: default
 <link href=/assets/docs/docs.css rel=stylesheet type=text/css>
 
 <ul id=docnav>
-  <li><a href=/docs>introduction</a></li>
+  <li>
+    <a href=/docs>introduction</a>
+    {% if page.sub == 'intro' %}
+    <ul>
+      <li><a href=#documents>documents</a></li>
+      <li><a href=#meta>meta</a></li>
+    </ul>
+    {% endif %}
+  </li>
   <li>
     <a href=/docs/databases>databases</a>
     {% if page.sub == 'databases' %}
@@ -33,7 +41,6 @@ layout: default
     <a href=/docs/sync>synchronizing data</a>
     {% if page.sub == 'sync' %}
     <ul>
-      <li><a href=#meta>meta data</a></li>
       <li><a href=#bulk>bulk updates</a></li>
     </ul>
     {% endif %}

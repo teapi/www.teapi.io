@@ -19,10 +19,6 @@
       }
     }
   };
-
-  //cheat
-  // var img = document.createElement('img');
-  // img.src = 'https://sandbox.teapi.io/v1/companies?sort=-funding&key=4800mh74u41s&callback=techstars_callback';
 })();
 
 

@@ -4,11 +4,13 @@ title: Types · Teapi
 sub: types
 ---
 <h1>Types</h1>
-<p>Types represent a distinct entity within your system. Loosely speaking, a type is much like a database table. An important difference though is that a type is meant to be a denormalized and view-driven. For example, you might model <code>articles</code> and <code>tags</code> as two separate tables, but you'd have a single type, <code>articles</code>, which had an embedded array of <code>tags</code>.</p>
+<p>Types represent a distinct entity within your system. Loosely speaking, a type is much like a database table. An important difference though, is that a type is meant to be denormalized and view-driven. For example, you might model <code>articles</code> and <code>tags</code> as two separate tables, but you'd have a single type, <code>articles</code>, which had an embedded array of <code>tags</code>.</p>
 
-<p>The denormalized nature of a type cannot be overly stated. In our experience, it is much better to have rich (even fat) web service responses versus forcing clients to make multiple calls and piecing data together. For one thing, a single API call, even if verbose, will almost always outperform multiple calls (often by a large margin). For another, when every client has to do the same work (requesting and merging multiple calls), you're duplicating logic better centralized.</p>
+<p>The denormalized nature of a type cannot be overstated. In our experience, it is much better to have rich (even fat) web service responses versus forcing clients to make multiple calls and piecing data together. For one thing, a single API call, even if verbose, will almost always outperform multiple calls (often by a large margin). For another, when every client has to do the same work (requesting and merging multiple calls), you're duplicating logic better centralized.</p>
 
-<p>When you sync a document of a specific type, you'll sync this denormalized representation, which, for the most part, is how it'll be exposed via the Read API. For example, given a type named <code>books</code> (which would be accessible at https://XXX.teapi.io/v1/<strong>books</strong>), you might sync a document that looks like:</p>
+<p>The name you give a type is important. It's the name used in the Read API to access query this particular type. For example, a type called <code>books</code> would be accessible at https://ZYX.teapi.io/v1/<strong>books</strong>?key=XYZ.</p>
+
+<p>Here's a sample book document that we'll use to explain types in greater detail:</p>
 
 <pre data-language=json>
 {
@@ -29,23 +31,23 @@ sub: types
 }
 </pre>
 
-<p>While you can use whatever valid JSON structure you want, you do need to configure the primary key, any indexes you'll use for filtering, and optionally a parent relationship.</p>
+<p>While you can use whatever valid JSON structure you want, you do need to configure the primary key, any indexes you'll use for filtering, and optionally, parent relationships.</p>
 
 <a name=pk></a>
 <h2>Primary Key</h2>
 <p>Every document must have a primary key which must be unique within its type. The primary key can be an integer (int), a string (text) or case-insensitive string (itext). For the above book document, the primary key field would be <code>id</code> and the type would be <code>int</code>.</p>
 
-<p>The id field should likely map directly to your own internal ID (whether that's an auto-incrementing ID or a GUID, it doesn't matter). Every document will be directly accessible. Here's a real example: <a href="https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s">https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s</a> (the id in this case is <code>sendgrid</code>).</p>
+<p>The id field should likely map directly to your own internal ID (whether that's an auto-incrementing ID or a GUID, it doesn't matter). Every document will be directly accessible using this id. Here's a real example: <a href="https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s">https://sandbox.teapi.io/v1/companies/sendgrid?key=4800mh74u41s</a> (in this case, the id is <code>sendgrid</code>).</p>
 
 <a name=indexes></a>
 <h2>Indexes</h2>
-<p>Indexes define how you'll query and sort documents within a type. The index field is the key of the value to index within the JSON document. For example, we'd likely want to be able to filter and sort by date, so we'd add an index on <code>published.date</code> of type <code>int</code>. With this index in place, we could sort by date using <code>sort=published.date</code>, which is a bit of a mouthful. To solve this, we can give this index an alias, <code>date</code>. In other words, the index field is the key to the value to index in the document. The optional alias is the parameter name in the Read API.</p>
+<p>Indexes define how you'll query and sort documents. The index field is the path to the value within the document. For example, we'd likely want to be able to filter and sort by date, so we'd add an index on <code>published.date</code> of type <code>int</code>. With this index, we could sort by date using <code>sort=published.date</code>, which is a bit of a mouthful. To solve this, we can give the index an alias, <code>date</code>. In other words, the index field is the real path in the document, while the optional alias is the name to use in the Read API.</p>
 
-<p>It's worth noting that the <code>text</code> and <code>itext</code> types don't do full text searching. They are meant for short values, such as <code>category</code> or <code>status</code>. Values longer than 100 characters won't be indexed. Full text search <em>is</em> a feature we're eager to tackle.</p>
+<p>It's worth noting that the <code>text</code> and <code>itext</code> types don't do full text searching. They are meant for short values, such as <code>category</code> or <code>status</code>. Values longer than 100 characters won't be indexed.</p>
 
 <p>An index can also be created on an array (an array of integers, floats, booleans, strings or dates). Array indexes can't be used for sorting, and also have a size limit. They're meant to be used on fields such as <code>tags</code>.</p>
 
-<p>Integer, floats and dates indexes support filters such as greater than and less than or equal. Strings, bools and all arrays support equality checks (you can sort on either a string or bool).</p>
+<p>Integer, floats and dates indexes support filters such as greater than and less than or equal. Text, bools and all arrays support equality checks, but you can still sort on a text indexes.</p>
 
 <h2>Relationships</h2>
 <p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>

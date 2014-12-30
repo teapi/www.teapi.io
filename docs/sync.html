@@ -29,22 +29,6 @@ teapi.documents.create('people', {id: 4, name: 'leto atreides', power: 9001})
 t.Documents.Create("people", teapi.Doc(user))
 </pre>
 
-<a name=meta></a>
-<h2>Meta Data</h2>
-<p>When we talked about <a href="/docs/types/#indexes">types</a> we saw how indexes are created by specifying the key of the value within the document. Sometimes you may want to index a value which isn't part of the publically accessible document. You may, for example, have an internal popularity feature which is meaningless to consumers and best left un-exposed.</p>
-
-<p>For this reason, when creating or updating a document, it's possible to provide an additional meta data field. For example, in Node, we'd do:</p>
-
-<pre data-language=javascript>
-teapi.documents.update('people', {id: 4, name: 'leto atreides', power: 9001}, {power: 29485, rank: 3})
-</pre>
-
-<p>Given 3 indexes, on <code>id</code>, <code>power</code> and <code>rank</code>, the values <code>4</code>, <code>29485</code> and <code>3</code> would be indexed respectively. In other words, an index first looks at the meta data, and if there is no meta data, or if the specific field is not in the meta data, the value is retrieved from the main document.</p>
-
-<div class=important>
-  <p>Meta data isn't meant as a secure/secret storage for values. There's no reason to have un-indexed meta data, and once indexed, queries can be made to reveal the underlying value. Meta data is only meant to help keep your documents neat and clean.</p>
-</div>
-
 <a name=bulk></a>
 <h2>Bulk Updates</h2>
 <p>While sending updates a document at a time is fine, each library also exposes a bulk update method. Up to 1000 documents can be created/insertd at a time, along with up to 1000 deletions. Bulk updates perform much better and should be used whenever possible.</p>
