@@ -43,11 +43,13 @@ sub: types
 <h2>Indexes</h2>
 <p>Indexes define how you'll query and sort documents. The index field is the path to the value within the document. For example, we'd likely want to be able to filter and sort by date, so we'd add an index on <code>published.date</code> of type <code>int</code>. With this index, we could sort by date using <code>sort=published.date</code>, which is a bit of a mouthful. To solve this, we can give the index an alias, <code>date</code>. In other words, the index field is the real path in the document, while the optional alias is the name to use in the Read API.</p>
 
-<p>It's worth noting that the <code>text</code> and <code>itext</code> types don't do full text searching. They are meant for short values, such as <code>category</code> or <code>status</code>. Values longer than 100 characters won't be indexed.</p>
+<p>It's worth noting that the <code>text</code> and <code>itext</code> types don't do full text searching. They are meant for short values, such as <code>category</code> or <code>status</code>. Values longer than 100 characters won't be indexed. Special full-text searching indexes are available and explained shorlty.</p>
 
-<p>An index can also be created on an array (an array of integers, floats, booleans, strings or dates). Array indexes can't be used for sorting, and also have a size limit. They're meant to be used on fields such as <code>tags</code>.</p>
+<p>An index can also be created on an array (an array of integers, floats, booleans, strings or dates). Array indexes can only be used to check if a value exists within the array, such as finding documents that have a "scifi" tag. They are limited in terms of size and cannot be used for sorting (which probably makes sense anyways).</p>
 
-<p>Integer, floats and dates indexes support filters such as greater than and less than or equal. Text, bools and all arrays support equality checks, but you can still sort on a text indexes.</p>
+<p>Integer, floats and dates indexes support range filters: >, >=, &lt; and &lt;= as well as equals and not equals. Text, itext and bool values only support equals and not equals.</p>
+
+<p>It's possible to flag an index as being a <em>lookup</em>. Lookup indexes are meant mostly meant for string values such as <code>gender</code>, <code>status</code> or <code>haircolor</code> - indexes that have few distinct values compared to the total number of documents. When used appropriately (on values with low cardinality) they perform better and take up less space than normal indexes. Technically, you can create a lookup index on integers and floats, but this will limit the type of query you can do to equality.</p>
 
 <h2>Relationships</h2>
 <p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>
