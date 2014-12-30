@@ -52,35 +52,9 @@ sub: types
 <h2>Relationships</h2>
 <p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>
 
-<p>A relationship implicitly creates an index. While it's possible to use this index like any other index, the purpose of relationships is to allow for more intuitive URL structure. For example, if we were to define a relationship on <code>books</code> to <code>authors</code> on the <code>author.id</code> field, we'd be able to get a list of books written by Frank Herbert via: https://ZYX.teapi.io/v1/authors/herbertf/books?key=XYZ (as well as apply any additional book filters to retrieve a subset).</p>
+<p>A relationship implicitly creates special indexes which automatically creates an intuitive URL structure. For example, if we were to define a relationship from <code>books</code> to <code>authors</code> on the <code>author.id</code> field, we'd be able to get a list of books written by Frank Herbert via: https://ZYX.teapi.io/v1/authors/herbertf/books?key=XYZ (as well as apply any additional book filters to retrieve a subset).</p>
 
-<p>There are two types of relationship: simple and polymorphic.</p>
-
-<a name=simple></a>
-<h3>Simple Relationships</h3>
-<p>A simple relationship is used when the child document can only belong to one type. This is likely the most common type of relationship you'll use. Like the primary key, it has no alias as it shouldn't be queried directly, but it can an array. It's easy to see how this might be useful: books with co-authors.</p>
-
-<p>In the above example, our parent key field could be <code>author.id</code> of type <code>text</code>.</p>
-
-<a name=poly></a>
-<h3>Polymorphic Relationships</h3>
-<p>Polymorphic relationships are used when a type can belong to different parent types. A common example are <code>comments</code>, which could belong to either <code>books</code> or <code>authors</code>.</p>
-
-<p>A document containing a polymorphic relationship needs both its parent id as well as its parents type:</p>
-
-<pre data-language=json>
-{
-  ...
-  "parent:" {
-    "id": 39958,
-    "type": "book",
-    ...
-  }
-  ...
-}
-</pre>
-
-<p>Given the above snippet, the parent key field would be <code>parent.id</code>, the parent type field would be <code>parent.type</code>. We'd define two values: <code>book</code> associated to the <code>books</code> parent type and <code>author</code> associated to the <code>authors</code> parent type.</p>
+<p>It's possible to create more than one relationship. A <code>book</code> coulds belong to an <code>author</code> as well as a <code>publisher</code>.</p>
 
 <p>Remember, your types aren't set in stone. That said, changes made to types with hundreds of thousands of documents can take a while to propagate (the old structure remains active until the new one is ready). The best thing to do is to create a type with an name and primary key, upload a small sample of documents (~20) and play with various indexes and relationships.</p>
 
