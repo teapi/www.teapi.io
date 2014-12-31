@@ -49,7 +49,7 @@ sub: types
 
 <p>Integer, floats and dates indexes support range filters: >, >=, &lt; and &lt;= as well as equals and not equals. Text, itext and bool values only support equals and not equals.</p>
 
-<p>It's possible to flag an index as being a <em>lookup</em>. Lookup indexes are meant mostly meant for string values such as <code>gender</code>, <code>status</code> or <code>haircolor</code> - indexes that have few distinct values compared to the total number of documents. When used appropriately (on values with low cardinality) they perform better and take up less space than normal indexes. Technically, you can create a lookup index on integers and floats, but this will limit the type of query you can do to equality.</p>
+<p>It's possible to flag an index as being a <em>lookup</em>. Lookup indexes are meant mostly meant for string values such as <code>gender</code>, <code>status</code> or <code>haircolor</code> - indexes that have few distinct values compared to the total number of documents. When used appropriately (on values with low cardinality) they perform better and take up less space than normal indexes. Technically, you can create a lookup index on integers and floats, but this removes the ability to sort as well as using a range filter or not equal filter.</p>
 
 <h2>Relationships</h2>
 <p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>

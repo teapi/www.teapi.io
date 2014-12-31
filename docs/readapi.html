@@ -20,13 +20,29 @@ https://sandbox.teapi.io/v1/companies?sort=-funding&<strong>key</strong>=4800mh7
 
 <p><code>sort</code> is used to sort using the specified index, ascending: <code>sort=name</code> or descending: <code>sort=-name</code>.</p>
 
-<p><code>perpage</code> controls the number of records. The default is 25, but the value can be anything from 1 to 50.</p>
+<p><code>perpage</code> controls the number of records. The default is 20, but the value can be anything from 1 to 50.</p>
 
 <p><code>after</code> and <code>before</code> are used to control paging. These are values you won't calculate but rather get from the JSON result itself.</p>
 
 <p><code>callback</code> is used to make a <a href="https://en.wikipedia.org/wiki/JSONP">JSONP requests</a>, which is useful for making otherwise prohibited cross domain requests from the browser.</p>
 
+<a name=fts></a>
+<h2>Full Text Search</h2>
+<p>Full text search indexes can be queried using the <code>search[2_LETTER_CODE]</code> parameter. The codes are:</p>
 
+<ul>
+  <li>en (english)</li>
+  <li>fr (french)</li>
+  <li>de (german)</li>
+  <li>it (italian)</li>
+  <li>es (spanish)</li>
+</ul>
+
+<p>So to query a german index, you'd use <code>search[de]=das+boot</code>.</p>
+
+<p>The first full text search index listed in the management console is also available as simply as <code>search</code>. So if you only had 1 full text index, say for english, it would be available as either <code>search</code> or <code>search[en]</code>.</p>
+
+<p>To sort results by rank, use the <code>sort=search</code> sort value, or, more likely, the <code>sort=-search</code> to go from highest to lowest rank.</p>
 
 <div class=pager>
   <a href=/docs/sync class=prev>synchronizing data</a>
