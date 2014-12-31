@@ -228,7 +228,7 @@
     document.addEventListener('keydown', function(e){if (e.keyCode == 27) { minimizeAll(); }}, false);
     document.addEventListener('click', minimizeAll, false);
   } else {
-    document.addEventListener('onkeydown', function(){if (event.which == 27) { minimizeAll(); }});
+    document.attachEvent('onkeydown', function(){if (event.which == 27) { minimizeAll(); }});
     document.attachEvent('onclick', minimizeAll);
   }
 
