@@ -1,5 +1,6 @@
 (function () {
   'use strict';
+  var viewers = [];
   var callbackPattern = /&callback=[^&]+/g
   function Viewer(container, config) {
     var self = this;
@@ -19,15 +20,6 @@
       removeClass(self.container, 'loading');
     };
 
-    document.onkeydown = function(e) {
-      e = (e || event);
-      if ((e.keyCode || e.which) == 27) { self.minimize(); }
-    };
-
-    document.onclick = function() {
-      self.minimize();
-    };
-
     container.onclick = function(e) {
       var target = e ? e.target : window.event.srcElement;
       if (target.tagName == 'A' && target.getAttribute('data-teapi') == 'true') {
@@ -43,6 +35,7 @@
     }
 
     container.appendChild(this.searches.node);
+    viewers.push(this);
     this.reload();
   };
 
@@ -225,6 +218,19 @@
     escaper.innerHTML = '';
     return html;
   };
+
+  function minimizeAll() {
+    for (var i = 0; i < viewers.length; i++) {
+      viewers[i].minimize();
+    }
+  }
+  if (document.addEventListener) {
+    document.addEventListener('keydown', function(e){if (e.keyCode == 27) { minimizeAll(); }}, false);
+    document.addEventListener('click', minimizeAll, false);
+  } else {
+    document.addEventListener('onkeydown', function(){if (event.which == 27) { minimizeAll(); }});
+    document.attachEvent('onclick', minimizeAll);
+  }
 
   window.TeapiViewer = Viewer;
 })();

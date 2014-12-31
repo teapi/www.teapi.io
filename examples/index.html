@@ -19,7 +19,7 @@ title: Examples · Teapi
 <script>
 var examples = {
   techstars: {
-    key: '4800mh74u41s',
+    key: '658evf6hqdj4',
     baseUrl: 'https://sandbox.teapi.io/v1/',
     searches: [
       {name: 'Companies sorted by funding (most to least)', url: 'companies?sort=-funding'},
@@ -30,12 +30,13 @@ var examples = {
     ]
   },
   nutritional: {
-    key: '75oxwlybwagw',
+    key: 'uauw8xo4l4w',
     baseUrl: 'https://sandbox.teapi.io/v1/',
     searches: [
       {name: 'Most calory-dense food with at least some fiber', url: 'foods?sort=-energy&fiber[gt]=0'},
       {name: 'Most B12 but with little protein', url: 'foods?sort=-b12&protein[lt]=2'},
       {name: 'Highest % of refuse (inedible materials, like shells)', url: 'foods?sort=-refuse'},
+      {name: 'Cheese pizza search', url: 'foods?search=cheese+pizza&sort=-search'},
       {name: 'Peanute Butter', url: 'foods/16167'}
     ]
   }
