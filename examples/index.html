@@ -34,9 +34,10 @@ var examples = {
     baseUrl: 'https://sandbox.teapi.io/v1/',
     searches: [
       {name: 'Most calory-dense food with at least some fiber', url: 'foods?sort=-energy&fiber[gt]=0'},
+      {name: 'Cheese pizza search', url: 'foods?search=cheese+pizza&sort=-search'},
+      {name: 'Sweet spices and herbs', url: 'categories/200/foods?sort=-sugar'},
       {name: 'Most B12 but with little protein', url: 'foods?sort=-b12&protein[lt]=2'},
       {name: 'Highest % of refuse (inedible materials, like shells)', url: 'foods?sort=-refuse'},
-      {name: 'Cheese pizza search', url: 'foods?search=cheese+pizza&sort=-search'},
       {name: 'Peanute Butter', url: 'foods/16167'}
     ]
   }
