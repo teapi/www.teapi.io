@@ -4,24 +4,27 @@ title: Databases · Teapi
 sub: databases
 ---
 <h1>Databases</h1>
-<p>Your database has a few important properties, as well as being the container for types and indexes, which define your data and how you intend to query it.</p>
+<p>Your database's configuration can be accessed via the <em>settings</em> section of the <a href="https://manage.teapi.io/">management console</a>. Your database's name is for your own sake.</p>
 
-<p>When you create an account, a new database is automatically created for you. The database settings are available in the <code>settings</code> menu of the <a href="https://manage.teapi.io/">management console</a>. You can name your database anything you want, the name is for your own sake. The Read API and Sync API portion of your database's settings are very important.</p>
+<p>You can choose to enable <a href="https://en.wikipedia.org/wiki/JSONP">JSONP</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> access to your database. By default, both are disabled.</p>
+
+<p>If you intend to consume the API on a website using client-side code (JavaScript), you'll need to enable one or the other (or both). JavaScript frameworks, such as JQuery, support both. We suggest CORS, as it's specifically designed for this use-case and provides greater flexibility.</p>
+
+<p>The most open setting is to enable JSONP and to enter 1 CORS origin with the value of <code>*</code>.</p>
 
 <a name=readapi></a>
 <h2>Read API</h2>
-<p>The Read API section tells you the hostname you can connect to in order to consume your data (you can use HTTP or HTTPS). It also lets you create and remove access keys. By default, your database has no access keys and thus its data cannot be consumed.</p>
+<p>The Read API section tells you the hostname you can connect to in order to consume your data (you can use HTTP or HTTPS). It also lets you create and remove access keys. By default, your database has no access keys and thus, cannot be consumed.</p>
 
 <p>Typically you'll want to create an access key per client application. In other words, you'll want one for your iOS app, one for your Android app and one for your web app. This is important for two reasons. First, if you need to revoke a key, you'll minimize the impact. Second, we generate usage reports broken down per-key.</p>
 
 <p>There are two types of access keys: those with a secret and those without. You can use a mix of both. Keys without a secret are sent in the query string of each request using the <code>key</code> parameter. Keys with a secret require that the request include a signed <code>Authorization</code> and a valid <code>Date</code> headers.</p>
 
 <div class=important>
+  <a name=secret></a>
   <p><strong>Which type of key should you choose?</strong><p>
-
   <p>While secrets are never transmitted, it isn't hard for a programmer to disassemble your application and extract the secret.</p>
   <p>For websites, signed keys are far more trouble than they are worth. For applications, signed keys provide a little more protection and are easy to implement, so there's little reason not to use them (even though the level of security they provide is dubious).</p>
-  <p>Moving forward, we'll expand our reporting to include more usage insight as well as better tools to track and try and block potential abusers (it's an uphill battle though, like trying to stop screen scraping).</p>
 </div>
 
 <p>The <a href="/docs/readapi">Read API chapter</a> covers the implementation detail of both approaches.</p>
