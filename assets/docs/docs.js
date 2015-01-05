@@ -19,6 +19,15 @@
       }
     }
   };
+
+  document.getElementById('menuicon').onclick = function() {
+    var nav = document.getElementById('docnav');
+    if (nav.style.display == 'block') {
+      nav.style.display = 'none';
+    } else {
+      nav.style.display = 'block';
+    }
+  }
 })();
 
 
