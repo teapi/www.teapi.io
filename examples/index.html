@@ -20,8 +20,9 @@ title: Examples · Teapi
 var examples = {
   techstars: {
     key: '658evf6hqdj4',
-    baseUrl: 'https://sandbox.teapi.io/v1/',
+    baseUrl: '//sandbox.teapi.io/v1/',
     searches: [
+      {name: 'Full text search for game (sorted by funding-boosted relevancy)', url: 'companies?search=gaming&sort=-search'},
       {name: 'Companies sorted by funding (most to least)', url: 'companies?sort=-funding'},
       {name: 'Acquired Boulder-based companies with 500K+ funding', url: 'companies?city=boulder&status=acquired&funding[gte]=500000'},
       {name: 'Classes sorted by number of companies (least to most)', url: 'classes?sort=count'},
@@ -31,7 +32,7 @@ var examples = {
   },
   nutritional: {
     key: 'uauw8xo4l4w',
-    baseUrl: 'https://sandbox.teapi.io/v1/',
+    baseUrl: '//sandbox.teapi.io/v1/',
     searches: [
       {name: 'Most calory-dense food with at least some fiber', url: 'foods?sort=-energy&fiber[gt]=0'},
       {name: 'Cheese pizza search', url: 'foods?search=cheese+pizza&sort=-search'},

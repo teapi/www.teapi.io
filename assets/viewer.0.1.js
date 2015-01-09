@@ -166,7 +166,7 @@
     var str = array ? '[' : '{'
     var first = true;
     for (var k in node) {
-      if (first == false) {
+      if (first === false) {
         str += ',';
       } else {
         first = false;
