@@ -32,14 +32,18 @@ noselect()
       cursor pointer
     &.many:before
       position absolute
-      bottom 8px
-      right 12px
+      bottom 0
+      right 0
+      height 30px
+      line-height 30px
       font-size 12px
-      content: "\25BC";
+      padding 0 8px
+      border-left 1px solid #444
+      content "\25BC"
     &.show
       z-index 3
     &.show:before
-      content: "\25B2";
+      content "\25B2"
   .searches li
     padding 0 50px 0 10px
     line-height 30px
