@@ -51,6 +51,26 @@ sub: types
 
 <p>It's possible to flag an index as being a <em>lookup</em>. Lookup indexes are meant mostly meant for string values such as <code>gender</code>, <code>status</code> or <code>haircolor</code> - indexes that have few distinct values compared to the total number of documents. When used appropriately (on values with low cardinality) they perform better and take up less space than normal indexes. Technically, you can create a lookup index on integers and floats, but this removes the ability to sort as well as using a range filter or not equal filter.</p>
 
+<a name=fts></a>
+<h2>Full Text Search</h2>
+<p>You can create full text search indexes on the value of a specific field. If you want to index multiple fields, or want to associate keywords with a document, consider using a single field placed within the <a href=/docs/#meta>meta document</a>.</p>
+
+<p>When you create a full text search index, you must specify the language of the content. Optionally specify a boosting field, which alters the ordering of documents returned when sorted by their full text search rank. A value less than 1 will reduce the document's rank, a value greater than 1 will increase it (it's a multiplicative factor).</p>
+
+<p>Here's a sample of what a meta <code>search</code> field might look like:</p>
+<pre data-language=json>
+{
+  "search": {
+    "en": "....",
+    "fr": "....",
+    "boost": 5
+  }
+}
+</pre>
+
+<p>This document gets a boost, maybe based on the author's ranking.</p>
+
+<a name=relationships></a>
 <h2>Relationships</h2>
 <p>Relationships are an optional and more complicated part of types. Relationships are created on the child type, and thus express the "belongs to" side of the relationship. To create a relationship, you need at least two types.</p>
 
