@@ -4,7 +4,7 @@ title: Databases · Teapi
 sub: databases
 ---
 <h1>Databases</h1>
-<p>Your database's configuration can be accessed via the <em>settings</em> section of the <a href="https://manage.teapi.io/">management console</a>. Your database's name is for your own sake.</p>
+<p>Your database's configuration can be accessed via the <em>settings</em> section of the <a href="https://manage.teapi.io/">management console</a>. Your database's name is only to help you keep things organized.</p>
 
 <p>You can choose to enable <a href="https://en.wikipedia.org/wiki/JSONP">JSONP</a> and <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Access_control_CORS">CORS</a> access to your database. By default, both are disabled.</p>
 
@@ -12,13 +12,11 @@ sub: databases
 
 <p>The most open setting is to enable JSONP and to enter 1 CORS origin with the value of <code>*</code>.</p>
 
-<a name=readapi></a>
-<h2>Read API</h2>
-<p>The Read API section tells you the hostname you can connect to in order to consume your data (you can use HTTP or HTTPS). It also lets you create and remove access keys. By default, your database has no access keys and thus, cannot be consumed.</p>
+<a name=keys></a>
+<h2>keys</h2>
+<p>Keys help control who can access your data and are used for grouping some of the usage reports. Typically, you'll want to create a key per client application. In other words, you'll want one for your iOS app, one for your Android app and one for your web app.</p>
 
-<p>Typically you'll want to create an access key per client application. In other words, you'll want one for your iOS app, one for your Android app and one for your web app. This is important for two reasons. First, if you need to revoke a key, you'll minimize the impact. Second, we generate usage reports broken down per-key.</p>
-
-<p>There are two types of access keys: those with a secret and those without. You can use a mix of both. Keys without a secret are sent in the query string of each request using the <code>key</code> parameter. Keys with a secret require that the request include a signed <code>Authorization</code> and a valid <code>Date</code> headers.</p>
+<p>You control whether or not a key has write access, as well as whether or not requests using a key must be signed with a secret. A key that has write access must have a secret, but it's up to you whether requests made with read-only keys must be signed.</p>
 
 <div class=important>
   <a name=secret></a>
@@ -27,13 +25,11 @@ sub: databases
   <p>For websites, signed keys are far more trouble than they are worth. For applications, signed keys provide a little more protection and are easy to implement, so there's little reason not to use them (even though the level of security they provide is dubious).</p>
 </div>
 
+<p>The above notice is true only for the case where your keys are distributed (such as when you're shipping a mobile application). If writes are only coming from your own servers, then the secrets associated with write-enabled keys are secure and the your writes are protected (which is why secrets with write-keys are required).</p>
+
 <p>The <a href="/docs/readapi">Read API chapter</a> covers the implementation detail of both approaches.</p>
 
-<a name=syncapi></a>
-<h2>Sync API</h2>
-<p>Where the Read API is meant to have many consumers and focused on reads, the Sync API is used only by your systems and focuses on writes. Since you're in full control of the systems which use the Sync API, a key with secret is both mandatory and useful (the use of HTTPS is also mandatory).</p>
-
-<p>The <a href=/docs/sync>synching chapter</a> goes into details about the sync process. From the <code>settings</code> section of the management console you'll get the information needed to configure your our sync libraries (host, key and secret) as well as the ability generate a new secret.</p>
+<p>The <a href=/docs/sync>synching chapter</a> goes into details about the sync process. From the <code>settings</code> section of the management console you'll get the information needed to configure your our sync libraries (host, key and secret) as well as the ability generate a new keys.</p>
 
 <div class=pager>
   <a href=/docs/ class=prev>introduction</a>
