@@ -1,0 +1,18 @@
+---
+layout: docs
+title: Types · Teapi
+sub: lists
+---
+<h1>Lists</h1>
+<p>A list is a named collections of documents associated with a type. For example, you might have a list named <em>newest</em> associated with the type <em>books</em>, which would likely represent a list of newly added books.</p>
+
+<p>Lists are designed to cover a number of common cases, such as providing a list of recently changed or updated documents, as well as being useful for currated content. For example, you might have a list of <em>favorites</em> or <em>onsale</em>.</p>
+
+<p>Strictly speaking, list aren't necessary. Whatever you can achieve with a list, you can also achieve with an index. An index on the <em>created_at</em> field would let you see a list of recently added books (via the <code>sort=-created_at</code> filter). A <code>category</code> field could let you flag some content as being <em>onsale</em> or a <em>favorite</em>.</p>
+
+<p>Despite this redundancy, lists have a few advantages. First, they'll perform better than an index and take less space. They also have their own API, allowing you to push items onto the list and automatically purging older records. Finally, they're accessible via a friendly endpoint: <em>/TYPE/LIST_NAME</em> and automatically sort from most recently added to least-recently added.</p>
+
+<div class=pager>
+  <a href=/docs/types class=prev>types</a>
+  <a href=/docs/sync class=next>synchronizing data</a>
+</div>

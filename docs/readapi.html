@@ -44,6 +44,10 @@ https://sandbox.teapi.io/v1/companies?sort=-funding&<strong>key</strong>=4800mh7
 
 <p>To sort results by rank, use the <code>sort=search</code> sort value, or, more likely, the <code>sort=-search</code> to go from highest to lowest rank.</p>
 
+<a name=lists></a>
+<h2>Lists</h2>
+<p>Lists are accessible at <code>/v1/TYPE_NAME/LIST_NAME</code> and, by default, sort by insertion order. Lists can further be filtered (and sorted) by any of the type's indexes. For example, given a list of <em>newest</em> books, we could find all new sci-fi books via: <code>/v1/books/newest?genre=scifi</code>
+
 <div class=pager>
   <a href=/docs/sync class=prev>synchronizing data</a>
   <a href=/docs/philosophy class=next>philosophy</a>
